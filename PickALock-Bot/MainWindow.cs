@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using System.Drawing.Imaging;
 
 namespace PickALock_Bot
 {
@@ -32,6 +33,7 @@ namespace PickALock_Bot
                 int UniqueHotkeyId = 1;
                 int HotKeyCode = (int)Keys.F9;
                 Boolean F9Registered = RegisterHotKey(this.Handle, UniqueHotkeyId, 0x0000, HotKeyCode);
+
             }
             catch (Exception ex)
             {
@@ -157,7 +159,51 @@ namespace PickALock_Bot
             try
             {
                 this.WindowState = FormWindowState.Minimized;
-                isCalibrated = true;
+                Screen screen = Screen.FromControl(this);
+                string currentScreenName = screen.DeviceName.ToString();
+                int currentScreenWidth = screen.Bounds.Width;
+                int currentScreenHeight = screen.Bounds.Height;
+                //isCalibrated = true;
+                Thread.Sleep(1500);
+                Bitmap fullScreenshot = new Bitmap(currentScreenWidth, currentScreenHeight, PixelFormat.Format32bppArgb);
+                Graphics memoryGraphics = Graphics.FromImage(fullScreenshot);
+                memoryGraphics.CopyFromScreen(screen.Bounds.X, screen.Bounds.Y, 0, 0, screen.Bounds.Size, CopyPixelOperation.SourceCopy);
+                this.WindowState = FormWindowState.Normal;
+
+                ScreenshotForm screenshotForm = new ScreenshotForm(fullScreenshot, screen);
+                screenshotForm.ShowDialog();
+
+                memoryGraphics.Dispose();
+                fullScreenshot.Dispose();
+                string date = DateTime.Now.ToString("MM/dd/yyyy");
+                string rootPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string folderPath = Path.Combine(rootPath, "Pick A Lock Bot");
+                string filePath = Path.Combine(folderPath, "calibration.txt");
+                if (Directory.Exists(folderPath))
+                {
+                    if (File.Exists(filePath))
+                    {
+                        string text = File.ReadAllText(filePath);
+                        string[] calibrationText = text.Split(';');
+                        string calDate = calibrationText[0];
+                        if (calDate.Equals(date))
+                        {
+                            isCalibrated = true;
+                        }
+                        else
+                        {
+                            isCalibrated = false;
+                        }
+                    }
+                    else
+                    {
+                        isCalibrated = false;
+                    }
+                }
+                else
+                {
+                    isCalibrated = false;
+                }
             }
             catch (Exception ex)
             {
@@ -349,5 +395,6 @@ namespace PickALock_Bot
                 ErrorHandler errorHandler = new ErrorHandler(ex);
             }
         }
+
     }
 }
