@@ -29,121 +29,166 @@ namespace PickALock_Bot
 
         public ScreenshotForm(Bitmap _screenshot, Screen _screen)
         {
-            InitializeComponent();
-            screenshot = _screenshot;
-            screen = _screen;
+            try
+            {
+                InitializeComponent();
+                screenshot = _screenshot;
+                screen = _screen;
 
-            int FirstHotkeyId = 1;
-            int FirstHotKeyKey = (int)Keys.Escape;
-            Boolean EscapeRegistered = RegisterHotKey(this.Handle, FirstHotkeyId, 0x0000, FirstHotKeyKey);
+                int FirstHotkeyId = 1;
+                int FirstHotKeyKey = (int)Keys.Escape;
+                Boolean EscapeRegistered = RegisterHotKey(this.Handle, FirstHotkeyId, 0x0000, FirstHotKeyKey);
 
-            int SecondHotkeyId = 2;
-            int SecondHotKeyKey = (int)Keys.F1;
-            Boolean F1Registered = RegisterHotKey(this.Handle, SecondHotkeyId, 0x0000, SecondHotKeyKey);
+                int SecondHotkeyId = 2;
+                int SecondHotKeyKey = (int)Keys.F1;
+                Boolean F1Registered = RegisterHotKey(this.Handle, SecondHotkeyId, 0x0000, SecondHotKeyKey);
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler errorHandler = new ErrorHandler(ex);
+            }
         }
 
         private void ScreenshotForm_Load(object sender, EventArgs e)
         {
-            Thread.Sleep(1500);
-            this.WindowState = FormWindowState.Maximized;
-            this.BackgroundImage = screenshot;
+            try
+            {
+                Thread.Sleep(1500);
+                this.WindowState = FormWindowState.Maximized;
+                this.BackgroundImage = screenshot;
 
-            pbx_canvas.Location = new Point(0, 0);
-            pbx_canvas.Width = screen.Bounds.Width;
-            pbx_canvas.Height = screen.Bounds.Height;
+                pbx_canvas.Location = new Point(0, 0);
+                pbx_canvas.Width = screen.Bounds.Width;
+                pbx_canvas.Height = screen.Bounds.Height;
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler errorHandler = new ErrorHandler(ex);
+            }
         }
 
         private Rectangle GetRect()
         {
-            rect = new Rectangle();
-            rect.X = Math.Min(LocationXY.X, LocationX1Y1.X);
-            rect.Y = Math.Min(LocationXY.Y, LocationX1Y1.Y);
-            rect.Width = Math.Abs(LocationXY.X - LocationX1Y1.X);
-            rect.Height = Math.Abs(LocationXY.Y - LocationX1Y1.Y);
-            return rect;
+            try
+            {
+                rect = new Rectangle();
+                rect.X = Math.Min(LocationXY.X, LocationX1Y1.X);
+                rect.Y = Math.Min(LocationXY.Y, LocationX1Y1.Y);
+                rect.Width = Math.Abs(LocationXY.X - LocationX1Y1.X);
+                rect.Height = Math.Abs(LocationXY.Y - LocationX1Y1.Y);
+                return rect;
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler errorHandlerew = new ErrorHandler(ex);
+                return rect;
+            }
         }
 
         private void pbx_canvas_MouseDown(object sender, MouseEventArgs e)
         {
-            IsMouseDown = true;
-            LocationXY = e.Location;
+            try
+            {
+                IsMouseDown = true;
+                LocationXY = e.Location;
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler errorHandler = new ErrorHandler(ex);
+            }
         }
 
         private void pbx_canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (IsMouseDown)
+            try
             {
-                LocationX1Y1 = e.Location;
-                pbx_canvas.Refresh();
+                if (IsMouseDown)
+                {
+                    LocationX1Y1 = e.Location;
+                    pbx_canvas.Refresh();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler errorHandler = new ErrorHandler(ex);
             }
         }
 
         private void pbx_canvas_MouseUp(object sender, MouseEventArgs e)
         {
-            if (IsMouseDown)
+            try
             {
-                LocationX1Y1 = e.Location;
-                IsMouseDown = false;
+                if (IsMouseDown)
+                {
+                    LocationX1Y1 = e.Location;
+                    IsMouseDown = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler errorHandler = new ErrorHandler(ex);
             }
         }
 
         private void pbx_canvas_Paint(object sender, PaintEventArgs e)
         {
-            if (rect != null)
+            try
             {
-                Pen pen = new Pen(Color.Red, 5);
-                e.Graphics.DrawRectangle(pen, GetRect());
+                if (rect != null)
+                {
+                    Pen pen = new Pen(Color.Red, 5);
+                    e.Graphics.DrawRectangle(pen, GetRect());
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler errorHandler = new ErrorHandler(ex);
             }
         }
 
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == 0x0312)
+            try
             {
-                int id = m.WParam.ToInt32();
-                switch (id)
+                if (m.Msg == 0x0312)
                 {
-                    case 1:
-                        this.isCalibrated2 = false;
-                        this.Close();
-                        break;
-                    case 2:
-                        if (!LocationXY.IsEmpty && !LocationX1Y1.IsEmpty)
-                        {
-                            string rootPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                            string folderPath = Path.Combine(rootPath, "Pick A Lock Bot");
-                            string filePath = Path.Combine(folderPath, "calibration.txt");
-                            string date = DateTime.Now.ToString("MM/dd/yyyy");
-                            if (!Directory.Exists(folderPath))
-                            {
-                                Directory.CreateDirectory(folderPath);
-                            }
-                            string text = $"{date};{screen.DeviceName};{screenshot.Width};{screenshot.Height};{LocationXY.X};{LocationXY.Y};{LocationX1Y1.X};{LocationX1Y1.Y}";
-                            File.WriteAllText(filePath, text);
-                            this.isCalibrated2 = true;
+                    int id = m.WParam.ToInt32();
+                    switch (id)
+                    {
+                        case 1:
+                            this.isCalibrated2 = false;
                             this.Close();
-                        }
-                        else
-                        {
-                            MessageBox.Show("You haven't set the game's area yet." + Environment.NewLine + "To exit calibration, you can press the Escape key.", "Calibration Warning", 
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                        break;
+                            break;
+                        case 2:
+                            if (!LocationXY.IsEmpty && !LocationX1Y1.IsEmpty)
+                            {
+                                string rootPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                                string folderPath = Path.Combine(rootPath, "Pick A Lock Bot");
+                                string filePath = Path.Combine(folderPath, "calibration.txt");
+                                string date = DateTime.Now.ToString("MM/dd/yyyy");
+                                if (!Directory.Exists(folderPath))
+                                {
+                                    Directory.CreateDirectory(folderPath);
+                                }
+                                string text = $"{date};{screen.DeviceName};{screenshot.Width};{screenshot.Height};{LocationXY.X};{LocationXY.Y};{LocationX1Y1.X};{LocationX1Y1.Y}";
+                                File.WriteAllText(filePath, text);
+                                this.isCalibrated2 = true;
+                                this.Close();
+                            }
+                            else
+                            {
+                                MessageBox.Show("You haven't set the game's area yet." + Environment.NewLine + "To exit calibration, you can press the Escape key.", "Calibration Warning",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                            break;
+                    }
                 }
-            }
 
-            base.WndProc(ref m);
-        }
-
-        public bool getCalibrationStatus()
-        {
-            if (isCalibrated2 == true)
-            {
-                return true;
+                base.WndProc(ref m);
             }
-            else
+            catch (Exception ex)
             {
-                return false;
+                ErrorHandler errorHandler = new ErrorHandler(ex);
             }
         }
 
