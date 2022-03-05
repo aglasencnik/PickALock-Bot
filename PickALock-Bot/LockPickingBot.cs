@@ -8,7 +8,7 @@ namespace PickALock_Bot
 {
     public class LockPickingBot
     {
-        public LockPickingBot()
+        public LockPickingBot(Screen screen)
         {
 
         }

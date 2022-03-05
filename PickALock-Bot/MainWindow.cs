@@ -22,6 +22,8 @@ namespace PickALock_Bot
         [DllImport("user32.dll")]
         public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
 
+        LockPickingBot bot;
+
         public MainWindow()
         {
             try
@@ -106,7 +108,6 @@ namespace PickALock_Bot
                 this.WindowState = FormWindowState.Minimized;
                 isActive = true;
                 btn_start.BackColor = Color.DarkRed;
-                LockPickingBot bot = new LockPickingBot();
                 bot.startBot();
             }
             catch (Exception ex)
@@ -122,7 +123,6 @@ namespace PickALock_Bot
                 this.WindowState = FormWindowState.Normal;
                 isActive = false;
                 btn_start.BackColor = Color.FromArgb(66, 220, 146);
-                LockPickingBot bot = new LockPickingBot();
                 bot.stopBot();
             }
             catch (Exception ex)
@@ -189,6 +189,7 @@ namespace PickALock_Bot
                         if (calDate.Equals(date))
                         {
                             isCalibrated = true;
+                            bot = new LockPickingBot(screen);
                         }
                         else
                         {
