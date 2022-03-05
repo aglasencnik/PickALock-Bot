@@ -55,11 +55,17 @@ namespace PickALock_Bot
             {
                 Thread.Sleep(1500);
                 this.WindowState = FormWindowState.Maximized;
-                this.BackgroundImage = screenshot;
+                //this.BackgroundImage = screenshot;
+                pbx_screenshot.Location = new Point(0, 0);
+                pbx_screenshot.Width = screen.Bounds.Width;
+                pbx_screenshot.Height = screen.Bounds.Height;
+                pbx_screenshot.Image = screenshot;
 
-                pbx_canvas.Location = new Point(0, 0);
-                pbx_canvas.Width = screen.Bounds.Width;
-                pbx_canvas.Height = screen.Bounds.Height;
+                pbx_canvas.Size = pbx_screenshot.Size;
+                pbx_canvas.Location = pbx_screenshot.Location;
+                pbx_canvas.BackColor = Color.Transparent;
+                pbx_canvas.BringToFront();
+                pbx_canvas.Parent = this.pbx_screenshot;
             }
             catch (Exception ex)
             {

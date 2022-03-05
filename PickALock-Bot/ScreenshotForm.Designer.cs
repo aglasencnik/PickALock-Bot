@@ -29,7 +29,9 @@
         private void InitializeComponent()
         {
             this.pbx_canvas = new System.Windows.Forms.PictureBox();
+            this.pbx_screenshot = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_canvas)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_screenshot)).BeginInit();
             this.SuspendLayout();
             // 
             // pbx_canvas
@@ -45,12 +47,21 @@
             this.pbx_canvas.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbx_canvas_MouseMove);
             this.pbx_canvas.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbx_canvas_MouseUp);
             // 
+            // pbx_screenshot
+            // 
+            this.pbx_screenshot.Location = new System.Drawing.Point(343, 283);
+            this.pbx_screenshot.Name = "pbx_screenshot";
+            this.pbx_screenshot.Size = new System.Drawing.Size(163, 72);
+            this.pbx_screenshot.TabIndex = 2;
+            this.pbx_screenshot.TabStop = false;
+            // 
             // ScreenshotForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.pbx_screenshot);
             this.Controls.Add(this.pbx_canvas);
             this.Cursor = System.Windows.Forms.Cursors.Cross;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -59,11 +70,13 @@
             this.Text = "Pick A Lock Bot";
             this.Load += new System.EventHandler(this.ScreenshotForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbx_canvas)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_screenshot)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
         private PictureBox pbx_canvas;
+        private PictureBox pbx_screenshot;
     }
 }
