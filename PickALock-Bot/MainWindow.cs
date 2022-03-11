@@ -63,6 +63,7 @@ namespace PickALock_Bot
         {
             try
             {
+                button_summary.Focus();
                 start_stop();
             }
             catch (Exception ex)

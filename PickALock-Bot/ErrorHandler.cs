@@ -16,7 +16,7 @@ namespace PickALock_Bot
             }
             catch
             {
-                Application.Exit();
+                Environment.Exit(1);
             }
         }
 
@@ -28,16 +28,16 @@ namespace PickALock_Bot
                     MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
                 {
                     MessageBox.Show(ex.ToString(), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Application.Exit();
+                    Environment.Exit(1);
                 }
                 else
                 {
-                    Application.Exit();
+                    Environment.Exit(1);
                 }
             }
             catch
             {
-                Application.Exit();
+                Environment.Exit(1);
             }
         }
     }
